@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Compiler Error Explainer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e2e8f0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Glass Card */
+.card {
+    width: 750px;
+    padding: 30px;
+    border-radius: 16px;
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* Title */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #38bdf8;
+    font-family: 'Orbitron', sans-serif;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: none;
+    background: #0f172a;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+/* Button */
+button {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    transform: scale(1.03);
+    background: linear-gradient(90deg, #0ea5e9, #38bdf8);
+}
+
+/* Output Box */
+.output-box {
+    margin-top: 20px;
+    padding: 20px;
+    background: #1e293b;
+    border-radius: 12px;
+    border-left: 5px solid #38bdf8;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Status Colors */
+.success {
+    color: #22c55e;
+}
+
+.error {
+    color: #ef4444;
+}
+
+/* Labels */
+.label {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+.output-text {
+    font-size: 15px;
+    color: #e2e8f0;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.output-box b {
+    color: #38bdf8;
+    font-weight: 600;
+}
+
+.code-text {
+    font-family: 'Fira Code', monospace;
+    background: #0f172a;
+    padding: 8px;
+    border-radius: 6px;
+    color: #facc15;
+    display: inline-block;
+}
+
+.confidence {
+    color: #22c55e;
+    font-weight: 600;
+}
+
+/* Security Warning */
+.security-box {
+    color: #facc15;
+    margin-top: 10px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dropdown styling */
+select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background-color: #0f172a;
+    color: #e2e8f0;
+    font-size: 15px;
+    outline: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+select:hover {
+    border-color: #38bdf8;
+}
+
+/* Focus effect */
+select:focus {
+    border-color: #22c55e;
+    box-shadow: 0 0 5px rgba(34, 197, 94, 0.5);
+}
+
+/* Dropdown arrow customization */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+/* Option styling */
+option {
+    background-color: #1e293b;
+    color: #e2e8f0;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+    <h2>🚀 Compiler Error Explainer</h2>
+    
+    <form method="POST">
+        <textarea name="code" rows="6" placeholder="Paste your code here...">{{ code }}</textarea>
+        <select name="language">
+            <option value="python">Python</option>
+            <option value="cpp">C/C++</option>
+        </select>
+
+        <button type="submit">Analyze Code</button>
+    </form>
+
+{% if result %}
+<div class="output-box">
+
+    <div>
+        {% if result.status == "success" %}
+            <span class="success">✅ SUCCESS</span>
+        {% else %}
+            <span class="error">❌ ERROR</span>
+        {% endif %}
+    </div>
+
+    <p class="output-text">
+        <b>Error:</b><br>
+        <span class="code-text">{{result.error}}</span>
+    </p>
+
+    <p class="output-text">
+        <b>Explanation:</b><br>
+        {{result.explanation}}
+    </p>
+
+    <p class="output-text">
+        <b>Fix:</b><br>
+        {{result.fix}}
+    </p>
+
+    <p class="output-text">
+        <b>Confidence:</b>
+        <span class="confidence">{{result.confidence}}%</span>
+    </p>
+
+    <div>
+        🧠 Context: <b>{{result.context}}</b>
+    </div>
+
+    {% if result.corrected_code %}
+<p class="output-text">
+<b>Corrected Code:</b><br>
+<span class="code-text">{{result.corrected_code}}</span>
+</p>
+{% endif %}
+    {% if result.security %}
+    <div class="security-box">
+        ⚠️ {{result.security}}
+    </div>
+    {% endif %}
+
+</div>
+{% endif %}
+
+</div>
+
+</body>
+</html>
